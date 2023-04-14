@@ -2,8 +2,10 @@ import weaviate
 import os
 import logging
 
+INDEX_NAME = "Document"
+
 SCHEMA = {
-    "class": "Document",
+    "class": INDEX_NAME,
     "properties": [
         {"name": "text", "dataType": ["text"]},
         {"name": "document_id", "dataType": ["string"]},

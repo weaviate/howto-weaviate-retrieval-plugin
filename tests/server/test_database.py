@@ -6,6 +6,8 @@ def test_init_db(caplog, weaviate_client):
     """
     Test the database initialization
     """
+    weaviate_client.schema.delete_all()
+
     with caplog.at_level(logging.DEBUG):
         database.init_db()
         assert "Creating schema" in caplog.text

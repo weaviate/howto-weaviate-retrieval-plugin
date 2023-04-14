@@ -3,6 +3,7 @@ import pytest
 import weaviate
 import time
 import requests
+import server.database
 
 HOST = "http://localhost:8080"
 
@@ -19,6 +20,7 @@ def weaviate_server():
 def weaviate_client(weaviate_server):
     client = weaviate.Client(HOST)
     client.schema.delete_all()
+    client.schema.create_class(server.database.SCHEMA)
     yield client
     client.schema.delete_all()
 
