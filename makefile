@@ -15,3 +15,6 @@ initdb:
 
 generate-openapi-spec:
 	python scripts/generate_openapi_spec.py
+
+deploy:
+	bash scripts/deploy_flyio.sh

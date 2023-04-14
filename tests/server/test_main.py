@@ -1,8 +1,12 @@
 from fastapi.testclient import TestClient
 from server.main import app
 import pytest
+import os
 
+
+BEARER_TOKEN = os.getenv("BEARER_TOKEN")
 client = TestClient(app)
+client.headers["Authorization"] = f"Bearer {BEARER_TOKEN}"
 
 
 @pytest.fixture

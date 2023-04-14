@@ -5,14 +5,15 @@
     "description_for_human": "Plugin to interact with documents using natural language. You can query, add and remove documents.",
     "description_for_model": "Plugin to interact with documents using natural language. You can query, add and remove documents.",
     "auth": {
-        "type": "none"
-    },
+        "type": "user_http",
+        "authorization_type": "bearer"
+      },
     "api": {
         "type": "openapi",
-        "url": "http://localhost:8000/.well-known/openapi.yaml",
+        "url": "https://demo-retrieval-app.fly.dev/.well-known/openapi.yaml",
         "is_user_authenticated": false
     },
-    "logo_url": "http://localhost:8000/.well-known/logo.png",
+    "logo_url": "https://demo-retrieval-app.fly.dev/.well-known/logo.png",
     "contact_email": "support@example.com",
     "legal_info_url": "http://www.example.com/legal"
 }

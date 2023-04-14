@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from contextlib import asynccontextmanager
 
 from .database import get_client, init_db, INDEX_NAME
@@ -9,6 +9,17 @@ from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import os
+
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+bearer_scheme = HTTPBearer()
+BEARER_TOKEN = os.environ.get("BEARER_TOKEN")
+
+
+def validate_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)):
+    if credentials.scheme != "Bearer" or credentials.credentials != BEARER_TOKEN:
+        raise HTTPException(status_code=401, detail="Invalid or missing token")
+    return credentials
 
 
 class Document(BaseModel):
@@ -72,7 +83,11 @@ def read_root():
 
 
 @app.post("/upsert")
-def upsert(doc: Document, client=Depends(get_weaviate_client)):
+def upsert(
+    doc: Document,
+    client=Depends(get_weaviate_client),
+    token: HTTPAuthorizationCredentials = Depends(validate_token),
+):
     """
     Insert a document into weaviate
     """
@@ -87,7 +102,11 @@ def upsert(doc: Document, client=Depends(get_weaviate_client)):
 
 
 @app.post("/query", response_model=List[QueryResult])
-def query(query: Query, client=Depends(get_weaviate_client)) -> List[Document]:
+def query(
+    query: Query,
+    client=Depends(get_weaviate_client),
+    token: HTTPAuthorizationCredentials = Depends(validate_token),
+) -> List[Document]:
     """
     Query weaviate for documents
     """
@@ -113,7 +132,11 @@ def query(query: Query, client=Depends(get_weaviate_client)) -> List[Document]:
 
 
 @app.post("/delete")
-def delete(delete_request: DeleteRequest, client=Depends(get_weaviate_client)):
+def delete(
+    delete_request: DeleteRequest,
+    client=Depends(get_weaviate_client),
+    token: HTTPAuthorizationCredentials = Depends(validate_token),
+):
     """
     Delete a document from weaviate
     """

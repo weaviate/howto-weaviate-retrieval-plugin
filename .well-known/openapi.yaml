@@ -4,7 +4,7 @@ info:
   description: A plugin for querying, inserting and deleting documents using natural language queries
   version: 'v1'
 servers:
-  - url: http://localhost:8000
+  - url: https://demo-retrieval-app.fly.dev
 paths:
   /upsert:
     post:
@@ -29,6 +29,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
+      security:
+      - HTTPBearer: []
   /query:
     post:
       summary: Query
@@ -56,6 +58,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
+      security:
+      - HTTPBearer: []
   /delete:
     post:
       summary: Delete
@@ -79,6 +83,8 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/HTTPValidationError"
+      security:
+      - HTTPBearer: []
 components:
   schemas:
     DeleteRequest:
@@ -158,3 +164,7 @@ components:
         type:
           title: Error Type
           type: string
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer
