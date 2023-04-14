@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from .database import init_db
-
+from .database import get_client, init_db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -12,6 +11,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+def get_weaviate_client():
+    """
+    Get a client to the Weaviate server
+    """
+    yield get_client()
 
 @app.get("/")
 def read_root():
