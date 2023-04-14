@@ -1,7 +1,22 @@
 from fastapi.testclient import TestClient
 from server.main import app
+import pytest
 
 client = TestClient(app)
+
+
+@pytest.fixture
+def documents(weaviate_client):
+    docs = [
+        {"text": "The lion is the king of the jungle", "document_id": "1"},
+        {"text": "The lion is a carnivore", "document_id": "2"},
+        {"text": "The lion is a large animal", "document_id": "3"},
+        {"text": "The capital of France is Paris", "document_id": "4"},
+        {"text": "The capital of Germany is Berlin", "document_id": "5"},
+    ]
+
+    for doc in docs:
+        client.post("/upsert", json=doc)
 
 
 def test_read_root():
@@ -24,3 +39,14 @@ def test_upsert(weaviate_client):
     assert docs[0]["properties"]["text"] == "Hello World"
     assert docs[0]["properties"]["document_id"] == "1"
     assert docs[0]["vector"] is not None
+
+
+def test_query(documents):
+    LIMIT = 3
+    response = client.post("/query", json={"text": "lion", "limit": LIMIT})
+
+    results = response.json()
+
+    assert len(results) == LIMIT
+    for result in results:
+        assert "lion" in result["document"]["text"]

@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import Depends, FastAPI
 from contextlib import asynccontextmanager
 
@@ -9,6 +10,16 @@ from pydantic import BaseModel
 class Document(BaseModel):
     text: str
     document_id: str
+
+
+class Query(BaseModel):
+    text: str
+    limit: int = 5
+
+
+class QueryResult(BaseModel):
+    document: Document
+    score: float
 
 
 @asynccontextmanager
@@ -48,3 +59,29 @@ def upsert(doc: Document, client=Depends(get_weaviate_client)):
         )
 
     return {"status": "ok"}
+
+
+@app.post("/query", response_model=List[QueryResult])
+def query(query: Query, client=Depends(get_weaviate_client)) -> List[Document]:
+    """
+    Query weaviate for documents
+    """
+    query_vector = get_embedding(query.text)
+
+    results = (
+        client.query.get(INDEX_NAME, ["document_id", "text"])
+        .with_near_vector({"vector": query_vector})
+        .with_limit(query.limit)
+        .with_additional("certainty")
+        .do()
+    )
+
+    docs = results["data"]["Get"][INDEX_NAME]
+
+    return [
+        QueryResult(
+            document={"text": doc["text"], "document_id": doc["document_id"]},
+            score=doc["_additional"]["certainty"],
+        )
+        for doc in docs
+    ]
