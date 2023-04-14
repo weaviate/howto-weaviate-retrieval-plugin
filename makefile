@@ -9,3 +9,6 @@ test:
 
 test-all:
 	poetry run pytest --cov server --cov-report term-missing -v -s tests
+
+initdb:
+	python -c 'from server.database import init_db; init_db()'
