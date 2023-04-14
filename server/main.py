@@ -8,6 +8,8 @@ from pydantic import BaseModel
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+import os
+
 
 class Document(BaseModel):
     text: str
@@ -37,6 +39,21 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.mount("/.well-known", StaticFiles(directory=".well-known"), name="static")
+
+# for localhost deployment
+if os.getenv("ENV", "dev") == "dev":
+    origins = [
+        f"http://localhost:8000",
+        "https://chat.openai.com",
+    ]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 
 def get_weaviate_client():
