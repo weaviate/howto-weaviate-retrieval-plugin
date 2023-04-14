@@ -1,0 +1,160 @@
+openapi: 3.0.1
+info:
+  title: Weaviate Retrieval Plugin
+  description: A plugin for querying, inserting and deleting documents using natural language queries
+  version: 'v1'
+servers:
+  - url: http://localhost:8000
+paths:
+  /upsert:
+    post:
+      summary: Upsert
+      description: Insert a document into weaviate
+      operationId: upsert_upsert_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Document"
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  /query:
+    post:
+      summary: Query
+      description: Query weaviate for documents
+      operationId: query_query_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Query"
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Query Query Post
+                type: array
+                items:
+                  "$ref": "#/components/schemas/QueryResult"
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+  /delete:
+    post:
+      summary: Delete
+      description: Delete a document from weaviate
+      operationId: delete_delete_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/DeleteRequest"
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HTTPValidationError"
+components:
+  schemas:
+    DeleteRequest:
+      title: DeleteRequest
+      required:
+      - document_id
+      type: object
+      properties:
+        document_id:
+          title: Document Id
+          type: string
+    Document:
+      title: Document
+      required:
+      - text
+      - document_id
+      type: object
+      properties:
+        text:
+          title: Text
+          type: string
+        document_id:
+          title: Document Id
+          type: string
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            "$ref": "#/components/schemas/ValidationError"
+    Query:
+      title: Query
+      required:
+      - text
+      type: object
+      properties:
+        text:
+          title: Text
+          type: string
+        limit:
+          title: Limit
+          type: integer
+          default: 5
+    QueryResult:
+      title: QueryResult
+      required:
+      - document
+      - score
+      type: object
+      properties:
+        document:
+          "$ref": "#/components/schemas/Document"
+        score:
+          title: Score
+          type: number
+    ValidationError:
+      title: ValidationError
+      required:
+      - loc
+      - msg
+      - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string

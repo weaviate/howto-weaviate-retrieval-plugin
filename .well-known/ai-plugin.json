@@ -1,0 +1,18 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "Weaviate Retrieval Plugin V2",
+    "name_for_model": "Weaviate_Retrieval_Plugin",
+    "description_for_human": "Plugin to interact with documents using natural language. You can query, add and remove documents.",
+    "description_for_model": "Plugin to interact with documents using natural language. You can query, add and remove documents.",
+    "auth": {
+        "type": "none"
+    },
+    "api": {
+        "type": "openapi",
+        "url": "http://localhost:8000/.well-known/openapi.yaml",
+        "is_user_authenticated": false
+    },
+    "logo_url": "http://localhost:8000/.well-known/logo.png",
+    "contact_email": "support@example.com",
+    "legal_info_url": "http://www.example.com/legal"
+}

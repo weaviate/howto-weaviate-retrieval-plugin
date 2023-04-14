@@ -12,3 +12,6 @@ test-all:
 
 initdb:
 	python -c 'from server.database import init_db; init_db()'
+
+generate-openapi-spec:
+	python scripts/generate_openapi_spec.py
