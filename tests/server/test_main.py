@@ -50,3 +50,14 @@ def test_query(documents):
     assert len(results) == LIMIT
     for result in results:
         assert "lion" in result["document"]["text"]
+
+
+def test_delete(documents, weaviate_client):
+    num_docs_before_delete = weaviate_client.data_object.get()["totalResults"]
+
+    response = client.post("/delete", json={"document_id": "3"})
+    assert response.status_code == 200
+
+    num_docs_after_delete = weaviate_client.data_object.get()["totalResults"]
+
+    assert num_docs_after_delete == num_docs_before_delete - 1

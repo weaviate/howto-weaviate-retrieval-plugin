@@ -22,6 +22,10 @@ class QueryResult(BaseModel):
     score: float
 
 
+class DeleteRequest(BaseModel):
+    document_id: str
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
@@ -85,3 +89,23 @@ def query(query: Query, client=Depends(get_weaviate_client)) -> List[Document]:
         )
         for doc in docs
     ]
+
+
+@app.post("/delete")
+def delete(delete_request: DeleteRequest, client=Depends(get_weaviate_client)):
+    """
+    Delete a document from weaviate
+    """
+    result = client.batch.delete_objects(
+        class_name=INDEX_NAME,
+        where={
+            "operator": "Equal",
+            "path": ["document_id"],
+            "valueString": delete_request.document_id,
+        },
+    )
+
+    if result["results"]["successful"] == 1:
+        return {"status": "ok"}
+    else:
+        return {"status": "not found"}
