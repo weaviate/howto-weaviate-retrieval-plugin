@@ -1,0 +1,19 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Format code",
+            "type": "shell",
+            "command": "poetry run black .",
+            "problemMatcher": []
+        },
+        {
+            "label": "Test code",
+            "type": "shell",
+            "command": "poetry run pytest --cov server --cov-report term-missing -v -s tests",
+            "problemMatcher": []
+        }
+    ]
+}

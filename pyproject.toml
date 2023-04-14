@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "howto-weaviate-retrieval-plugin"
+version = "0.0.1a"
+description = "A demo on how to create your very own chatgpt retrieval plugin!"
+authors = ["hsm207 <hsm207@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "server"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.95.1"
+weaviate-client = "^3.15.5"
+uvicorn = {extras = ["standard"], version = "^0.21.1"}
+httpx = "^0.24.0"
+openai = "^0.27.4"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.3.0"
+black = "^23.3.0"
+pytest-cov = "^4.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

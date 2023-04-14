@@ -1,0 +1,3 @@
+.coverage
+poetry.lock
+*.pyc
