@@ -6,6 +6,8 @@ from .database import get_client, init_db, INDEX_NAME
 from .embedding import get_embedding
 from pydantic import BaseModel
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 class Document(BaseModel):
     text: str
@@ -33,6 +35,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+app.mount("/.well-known", StaticFiles(directory=".well-known"), name="static")
 
 
 def get_weaviate_client():
