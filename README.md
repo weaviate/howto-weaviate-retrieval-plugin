@@ -1,6 +1,6 @@
 # Introduction
 
-A tutorial on how to build your own chatgpt plugin.
+A tutorial on how to build your own chatgpt plugin. Please read the [accompanying blog](https://weaviate.io/blog/how-to-chatgpt-plugin) post for more details!
 
 # Prerequisites
 * Docker
@@ -14,5 +14,5 @@ A tutorial on how to build your own chatgpt plugin.
 
 # Usage
 
-Read our blog post for further instructions.
+Refer to our blog post for further instructions.
 
